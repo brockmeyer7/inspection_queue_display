@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.decorators.http import require_http_methods
+from django.views.decorators.csrf import csrf_exempt
 import datetime
 
 
@@ -13,8 +14,7 @@ def index(request):
 
 
 @require_http_methods(['GET', 'POST'])
+@csrf_exempt
 def add_job(request):
-    if request.method == 'POST':
-        pass
     if request.method == 'GET':
         return render(request, 'add_job.html')
