@@ -1,18 +1,13 @@
 var counters = document.getElementsByClassName('counter');
-var keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-']
-var jobUPC = ''
-
-var base_url = 'http://127.0.0.1:8000/'
-console.log(counters);
-console.log(counters.length);
+var keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-'];
+var UPC = '';
+var base_url = 'http://127.0.0.1:8000/';
 
 for (var i = 0; i < counters.length; i++) {
-    console.log(counters[i])
     countdown(counters[i]);
 }
 
 function countdown(counter) {
-    console.log(counter.getAttribute('data-timeCreated'))
     var timeCreated = new Date(counter.getAttribute('data-timeCreated')).getTime()
 
     var x = setInterval(function () {
@@ -29,21 +24,22 @@ function countdown(counter) {
 document.addEventListener("keydown", function (e) {
     if (keys.indexOf(e.key) !== -1) {
         UPC += e.key
+        console.log(UPC.length)
         if (UPC.length === 8) {
-            // add_job()
-            this.location.reload()
+            update_jobs();
         }
     }
 })
 
-// function add_job() {
-//     fetch(base_url + 'add_job', {
-//         method: 'POST',
-//         headers: {
-//             'Accept': 'application/json',
-//             'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify({ "UPC": UPC })
-//     })
-//         .then(response => response.json())
-// }
+function update_jobs() {
+    fetch(base_url + 'update_jobs', {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ "UPC": UPC })
+    })
+        .then(() => { window.location.reload(true) });
+}

@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Centered Bootstrap Table</title>
+    <title>First Article Inspections</title>
     <!-- Add the Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="{% static 'style.css' %}">
@@ -20,6 +20,7 @@
                     <th>#</th>
                     <th>Job Number</th>
                     <th>Time Created</th>
+                    <th>CMM Program Required?</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,6 +29,13 @@
                     <td>{{job.idx}}</td>
                     <td>{{job.job_number}}</td>
                     <td class='counter' data-timeCreated='{{job.created}}'></td>
+                    <td>
+                        {% if job.needs_CMM %}
+                        Yes
+                        {% else %}
+                        No
+                        {% endif %}
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
