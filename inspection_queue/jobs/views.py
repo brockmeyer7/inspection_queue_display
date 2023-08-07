@@ -3,17 +3,17 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Avg
 import datetime
 from .models import Job, CompleteJob
 import json
 import pytz
-from time import sleep
 
 
 @require_http_methods(['GET', 'POST'])
 def index(request):
     tz = pytz.timezone('US/Central')
-    context = {'jobs_list': []}
+    context = {'jobs_list': [], 'average': None}
     jobs = list(Job.objects.all().order_by('created'))
     for i, job in enumerate(jobs):
         dt = job.created.astimezone(tz)

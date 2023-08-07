@@ -38,6 +38,18 @@
                     </td>
                 </tr>
                 {% endfor %}
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>Average Time for FAI</td>
+                    <td>
+                        {% if average != None %}
+                        {{average}}
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
