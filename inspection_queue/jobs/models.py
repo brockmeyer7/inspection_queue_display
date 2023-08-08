@@ -12,3 +12,4 @@ class CompleteJob(models.Model):
     created = models.DateTimeField()
     completed = models.DateTimeField()
     delta = models.FloatField(default=0)
+    program_required = models.BooleanField(default=False)

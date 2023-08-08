@@ -8,7 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>First Article Inspections</title>
     <!-- Add the Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+        integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
 
@@ -19,22 +20,21 @@
                 <tr>
                     <th>#</th>
                     <th>Job Number</th>
-                    <th>Time Created</th>
+                    <th>Time in Inspection</th>
                     <th>CMM Program Required?</th>
                 </tr>
             </thead>
             <tbody>
                 {% for job in jobs_list %}
-                <tr>
+                <tr class="job">
                     <td>{{job.idx}}</td>
-                    <td>{{job.job_number}}</td>
+                    <td class="job_number">{{job.job_number}}</td>
                     <td class='counter' data-timeCreated='{{job.created}}'></td>
                     <td>
-                        {% if job.needs_CMM %}
-                        Yes
-                        {% else %}
-                        No
-                        {% endif %}
+                        <div class="text-center">
+                            <a href="#" class="btn btn-success btn-sm active btn-block" role="button"
+                                id="{{job.idx}}">No</a>
+                        </div>
                     </td>
                 </tr>
                 {% endfor %}
@@ -54,9 +54,6 @@
         </table>
     </div>
 
-    <!-- Add the Bootstrap JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="{% static 'main.js' %}"></script>
 </body>
 

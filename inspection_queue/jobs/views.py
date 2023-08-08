@@ -49,8 +49,9 @@ def update_jobs(request):
             created = j.created.astimezone(tz)
             completed = datetime.datetime.now().astimezone(tz)
             delta = completed - created
+            program_required = json.loads(request.body)['program_required']
             cj = CompleteJob(job_number=job_number,
-                             created=created, completed=now, delta=delta.total_seconds())
+                             created=created, completed=now, delta=delta.total_seconds(), program_required=program_required)
             cj.save()
             j.delete()
             return HttpResponse('Success')
