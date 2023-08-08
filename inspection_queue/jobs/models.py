@@ -11,4 +11,4 @@ class CompleteJob(models.Model):
     job_number = models.CharField(max_length=10)
     created = models.DateTimeField()
     completed = models.DateTimeField()
-    delta = models.IntegerField()
+    delta = models.FloatField(default=0)

@@ -15,6 +15,14 @@ def index(request):
     tz = pytz.timezone('US/Central')
     context = {'jobs_list': [], 'average': None}
     jobs = list(Job.objects.all().order_by('created'))
+    cj = CompleteJob.objects.aggregate(Avg('delta'))
+
+    if cj['delta__avg'] != None:
+        avg = round(cj['delta__avg'])
+        hours = (avg % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        # minutes =
+        # seconds =
+
     for i, job in enumerate(jobs):
         dt = job.created.astimezone(tz)
         context['jobs_list'].append({'idx': str(i + 1), 'job_number': job.job_number,
@@ -27,6 +35,7 @@ def index(request):
 @csrf_exempt
 def update_jobs(request):
     if request.method == 'POST':
+        tz = pytz.timezone('US/Central')
         active_jobs = list(Job.objects.all())
         jobs_list = [job.job_number for job in active_jobs]
         now = datetime.datetime.now().astimezone(
@@ -35,8 +44,11 @@ def update_jobs(request):
 
         if job_number in jobs_list:
             j = Job.objects.get(job_number=job_number)
+            created = j.created.astimezone(tz)
+            completed = datetime.datetime.now().astimezone(tz)
+            delta = completed - created
             cj = CompleteJob(job_number=job_number,
-                             created=j.created, completed=now)
+                             created=created, completed=now, delta=delta.total_seconds())
             cj.save()
             j.delete()
             return HttpResponse('Success')
