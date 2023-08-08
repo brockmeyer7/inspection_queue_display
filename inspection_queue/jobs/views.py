@@ -1,5 +1,5 @@
 # pylint: disable=no-member
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
@@ -12,8 +12,14 @@ import pytz
 
 @require_http_methods(['GET', 'POST'])
 def index(request):
+    def split_time(avg: int):
+        hours = avg // (60 * 60)
+        minutes = (avg % (60 * 60)) // (60)
+        seconds = (avg % (60))
+        return hours, minutes, seconds
+
     tz = pytz.timezone('US/Central')
-    context = {'jobs_list': [], 'average': None}
+    context = {'jobs_list': [], 'average_pg': None, 'average_no_pg': None}
     jobs = list(Job.objects.all().order_by('created'))
     cj_avg_pg = CompleteJob.objects.filter(
         program_required=True).aggregate(Avg('delta'))['delta__avg']
@@ -21,17 +27,21 @@ def index(request):
         program_required=False).aggregate(Avg('delta'))['delta__avg']
 
     if cj_avg_pg != None:
-        avg = round(cj_avg_pg)
-        hours = avg // (60 * 60)
-        minutes = (avg % (60 * 60)) // (60)
-        seconds = (avg % (60))
+        avg_pg = round(cj_avg_pg)
+        hours, minutes, seconds = split_time(avg_pg)
         context['average_pg'] = str(hours) + 'h' + \
+            str(minutes) + 'm' + str(seconds) + 's'
+
+    if cj_avg_no_pg != None:
+        avg_no_pg = round(cj_avg_no_pg)
+        hours, minutes, seconds = split_time(avg_no_pg)
+        context['average_no_pg'] = str(hours) + 'h' + \
             str(minutes) + 'm' + str(seconds) + 's'
 
     for i, job in enumerate(jobs):
         dt = job.created.astimezone(tz)
         context['jobs_list'].append({'idx': str(i + 1), 'job_number': job.job_number,
-                                     'created': dt.isoformat(), 'need_CMM': job.needs_CMM})
+                                     'created': dt.isoformat(), 'program_required': job.program_required})
 
     return render(request, 'index.html', context)
 
@@ -67,9 +77,7 @@ def update_jobs(request):
 
 @require_http_methods(['POST'])
 @csrf_exempt
-def archive_job(request):
-    if request.method == 'POST':
-        job_number = json.loads(request.body)['UPC']
-        job = Job.objects.filter(job_number=job_number)
-        print(len(job))
-        return HttpResponse('Success')
+def program_required(request):
+    job_number = json.loads(request.body)['UPC']
+    program_required = json.loads(request.body)['program_required']
+    j = Job.objects.get(job_number=job_number)
