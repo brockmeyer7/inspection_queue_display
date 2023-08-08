@@ -15,14 +15,17 @@ def index(request):
     tz = pytz.timezone('US/Central')
     context = {'jobs_list': [], 'average': None}
     jobs = list(Job.objects.all().order_by('created'))
-    cj = CompleteJob.objects.aggregate(Avg('delta'))
+    cj_avg_pg = CompleteJob.objects.filter(
+        program_required=True).aggregate(Avg('delta'))['delta__avg']
+    cj_avg_no_pg = CompleteJob.objects.filter(
+        program_required=False).aggregate(Avg('delta'))['delta__avg']
 
-    if cj['delta__avg'] != None:
-        avg = round(cj['delta__avg'])
+    if cj_avg_pg != None:
+        avg = round(cj_avg_pg)
         hours = avg // (60 * 60)
         minutes = (avg % (60 * 60)) // (60)
         seconds = (avg % (60))
-        context['average'] = str(hours) + 'h' + \
+        context['average_pg'] = str(hours) + 'h' + \
             str(minutes) + 'm' + str(seconds) + 's'
 
     for i, job in enumerate(jobs):

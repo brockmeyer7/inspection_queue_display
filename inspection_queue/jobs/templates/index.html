@@ -41,10 +41,22 @@
                 <tr>
                     <td></td>
                     <td></td>
-                    <td>Average Time for FAI</td>
+                    <td>Average Time (No Program Required)</td>
                     <td>
-                        {% if average != None %}
-                        {{average}}
+                        {% if average_no_pg != None %}
+                        {{average_no_pg}}
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>Average Time (Program Required)</td>
+                    <td>
+                        {% if average_pg != None %}
+                        {{average_pg}}
                         {% else %}
                         -
                         {% endif %}
