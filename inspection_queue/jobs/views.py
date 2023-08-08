@@ -19,9 +19,11 @@ def index(request):
 
     if cj['delta__avg'] != None:
         avg = round(cj['delta__avg'])
-        hours = (avg % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-        # minutes =
-        # seconds =
+        hours = avg // (60 * 60)
+        minutes = (avg % (60 * 60)) // (60)
+        seconds = (avg % (60))
+        context['average'] = str(hours) + 'h' + \
+            str(minutes) + 'm' + str(seconds) + 's'
 
     for i, job in enumerate(jobs):
         dt = job.created.astimezone(tz)

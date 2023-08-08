@@ -13,7 +13,7 @@ function countdown(counter) {
     var x = setInterval(function () {
         var now = new Date().getTime();
         var timeElapsed = now - timeCreated;
-        var hours = Math.floor((timeElapsed % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var hours = Math.floor(timeElapsed / (1000 * 60 * 60));
         var minutes = Math.floor((timeElapsed % (1000 * 60 * 60)) / (1000 * 60));
         var seconds = Math.floor((timeElapsed % (1000 * 60)) / 1000);
 
