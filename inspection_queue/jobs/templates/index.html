@@ -32,13 +32,17 @@
                     <td class='counter' data-timeCreated='{{job.created}}'></td>
                     <td>
                         <div class="text-center">
-                            <a href="#" class="btn btn-success btn-sm active btn-block" role="button" id="{{job.idx}}">
-                                {% if job.program_required == True %}
-                                Yes
-                                {% else %}
+                            {% if job.program_required == False %}
+                            <a href="#" class="btn btn-success btn-sm active btn-block" role="button"
+                                id="{{job.job_number}}">
                                 No
-                                {% endif %}
                             </a>
+                            {% else %}
+                            <a href="#" class="btn btn-danger btn-sm active btn-block" role="button"
+                                id="{{job.job_number}}">
+                                Yes
+                            </a>
+                            {% endif %}
                         </div>
                     </td>
                 </tr>

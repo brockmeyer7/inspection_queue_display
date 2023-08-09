@@ -62,7 +62,7 @@ def update_jobs(request):
             created = j.created.astimezone(tz)
             completed = datetime.datetime.now().astimezone(tz)
             delta = completed - created
-            program_required = json.loads(request.body)['program_required']
+            program_required = j.program_required
             cj = CompleteJob(job_number=job_number,
                              created=created, completed=now, delta=delta.total_seconds(), program_required=program_required)
             cj.save()
@@ -75,9 +75,14 @@ def update_jobs(request):
             return HttpResponse('Success')
 
 
-@require_http_methods(['POST'])
+@require_http_methods(['PUT'])
 @csrf_exempt
 def program_required(request):
-    job_number = json.loads(request.body)['UPC']
-    program_required = json.loads(request.body)['program_required']
+    job_number = json.loads(request.body)['job_number']
     j = Job.objects.get(job_number=job_number)
+    if j.program_required == False:
+        j.program_required = True
+    else:
+        j.program_required = False
+    j.save()
+    return HttpResponse(json.dumps({'program_required': j.program_required}))
