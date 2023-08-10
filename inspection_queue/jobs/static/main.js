@@ -33,23 +33,6 @@ document.addEventListener("keydown", function (e) {
 function update_jobs() {
     var body = JSON.stringify({ "UPC": UPC });
 
-    // var job_numbers = [...document.getElementsByClassName('job')];
-
-    // for (var i = 0; i < job_numbers.length; i++) {
-    //     var job_number = job_numbers[i].getElementsByTagName('td')[1].innerHTML;
-    //     var button = job_numbers[i].getElementsByTagName('td')[3];
-    //     if (job_number === UPC) {
-    //         var buttonText = button.getElementsByClassName('btn-block')[0].innerHTML;
-    //         if (buttonText === 'Yes') {
-    //             var program_required = true;
-    //         }
-    //         else {
-    //             var program_required = false;
-    //         }
-    //         body = JSON.stringify({ "UPC": UPC, 'program_required': program_required });
-    //     }
-    // }
-
     fetch(base_url + 'update_jobs', {
         method: 'POST',
         mode: 'cors',
