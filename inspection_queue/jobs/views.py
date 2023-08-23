@@ -75,14 +75,29 @@ def update_jobs(request):
             return HttpResponse('Success')
 
 
-@require_http_methods(['PUT'])
+@require_http_methods(['GET', 'PUT'])
 @csrf_exempt
 def program_required(request):
-    job_number = json.loads(request.body)['job_number']
-    j = Job.objects.get(job_number=job_number)
-    if j.program_required == False:
-        j.program_required = True
-    else:
-        j.program_required = False
-    j.save()
-    return HttpResponse(json.dumps({'program_required': j.program_required}))
+    if request.method == 'PUT':
+        job_number = json.loads(request.body)['job_number']
+        j = Job.objects.get(job_number=job_number)
+        if j.program_required == False:
+            j.program_required = True
+        else:
+            j.program_required = False
+        j.save()
+        return HttpResponse(json.dumps({'program_required': j.program_required}))
+
+    if request.method == 'GET':
+        job_number = request.GET.get('job_number', '')
+        try:
+            j = Job.objects.get(job_number=job_number)
+            return HttpResponse(json.dumps({'program_required': j.program_required}))
+        except:
+            return HttpResponse(json.dumps({'program_required': None}))
+
+
+@csrf_exempt
+def get_job_qty(request):
+    job_qty = Job.objects.count()
+    return HttpResponse(json.dumps({'job_qty': job_qty}))
